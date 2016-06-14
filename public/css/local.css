@@ -1,0 +1,72 @@
+/* Local CSS */
+
+
+/* Disable Bootstrap printed links */
+@media print {
+	a[href]:after {
+		content: none !important;
+	}
+}
+
+/* Colors: http://flatuicolors.com/ */
+
+.palette.turquoise {
+	color: #1abc9c;
+}
+.palette.green-sea {
+	color: #16a085;
+}
+.palette.emerald {
+	color: #2ecc71;
+}
+.palette.nephritis {
+	color: #27ae60;
+}
+.palette.peter-river {
+	color: #3498db;
+}
+.palette.belize-hole {
+	color: #2980b9;
+}
+.palette.amethyst {
+	color: #9b59b6;
+}
+.palette.wisteria {
+	color: #8e44ad;
+}
+.palette.wet-asphalt {
+	color: #34495e;
+}
+.palette.midnight-blue {
+	color: #2c3e50;
+}
+.palette.sun-flower {
+	color: #f1c40f;
+}
+.palette.orange {
+	color: #f39c12;
+}
+.palette.carrot {
+	color: #e67e22;
+}
+.palette.pumpkin {
+	color: #d35400;
+}
+.palette.alizarin {
+	color: #e74c3c;
+}
+.palette.pomegranate {
+	color: #c0392b;
+}
+.palette.clouds {
+	color: #ecf0f1;
+}
+.palette.silver {
+	color: #bdc3c7;
+}
+.palette.concrete {
+	color: #95a5a6;
+}
+.palette.asbestos {
+	color: #7f8c8d;
+}

@@ -1,0 +1,10 @@
+Place following files here:
+
+jsoneditor.css
+jsoneditor.js
+jsoneditor.map
+jsoneditor.min.css
+jsoneditor.min.js
+img/jsoneditor-icons.svg
+
+Download from: https://github.com/josdejong/jsoneditor/tree/master/dist

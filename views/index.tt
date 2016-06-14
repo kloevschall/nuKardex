@@ -1,0 +1,192 @@
+[% USE date (format = '%Y', locale = 'da_DK') %]
+[% USE dato = date( format => '%A d. %d. %B %Y kl. %H:%M', locale => 'da_DK') %]
+
+<div class="container">
+	<div class="row">
+		[% PROCESS header.tt %]
+
+		<div class="well">
+
+			<!-- Find mønster formular -->
+			<div class="row">
+				
+				<form class="form" role="form" id="getJournal" name="getJournal" action="" method="get">
+					<input type="hidden" value="[% params.bibsys %]" name="bibsys" id="bibsys">
+					<input type="hidden" value="[% params.library %]" name="library" id="library">
+					<input type="hidden" value="[% params.sublibrary %]" name="sublibrary" id="sublibrary">
+					<input type="hidden" value="[% params.shelfmark %]" name="shelfmark" id="shelfmark">
+					<input type="hidden" value="[% params.itemstatus %]" name="itemstatus" id="itemstatus">
+					<input type="hidden" value="[% params.processstatus %]" name="processstatus" id="processstatus">
+					<input type="hidden" value="[% params.customerid %]" name="customerid" id="customerid">
+					<input type="hidden" value="[% params.email %]" name="email" id="email">
+
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="admsys">ADMSYS <sup>&nbsp;&nbsp;[ctrl+alt+a]</sup>
+								&nbsp;&nbsp;
+								<a class="clip" href="#" data-clipboard-target="#admsys" title="Kopier ADMSYS til udklipsholder">
+									<span class="fui-exit">copy</span>
+								</a>
+							</label>
+							<input value="[% params.admsys %]" type="text" class="form-control typeahead-only mousetrap" name="admsys" id="admsys" placeholder="doc-number">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="issn">ISSN nummer <sup>&nbsp;&nbsp;[ctrl+alt+i]</sup>
+								&nbsp;&nbsp;
+								<a class="clip" href="#" data-clipboard-target="#issn" title="Kopier ISSN til udklipsholder">
+									<span class="fui-exit">copy</span>
+								</a>
+							</label>							
+							<input value="[% params.issn %]" type="text" class="form-control typeahead-only mousetrap" name="issn" id="issn" placeholder="ISSN">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-6">
+							<label for="title">Tidsskriftstitel <sup>&nbsp;&nbsp;[ctrl+alt+t]</sup>
+								&nbsp;&nbsp;
+								<a class="clip" href="#" data-clipboard-target="#title" title="Kopier titlen til udklipsholder">
+									<span class="fui-exit">copy</span>
+								</a>
+							</label>
+							<input value="[% params.title %]" type="text" class="form-control typeahead-only mousetrap" name="title" id="title" placeholder="Titel">
+						</div>
+					</div>
+
+				</form>
+				
+			</div>
+		</div>
+
+
+		<span class="pull-right"><tt><sup>KONSOL&nbsp;</sup></tt></span>
+		<div class="panel panel-default">
+			<div class="panel-body console">
+			</div>
+		</div>
+
+		<div>
+
+			[% IF items.0.record %]
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>År / year</th>
+						<th>Årgang / volume</th>
+						<th>Nummer / issue</th>
+						<th>Placering</th>
+						<th class="col-xs-1">Samling</th>
+						<th class="col-xs-1">Status</th>
+						<th>Registrer og udskriv</th>
+						<th>Ryk hos leverandør</th>
+						<th>Slet eksemplar</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					[% FOREACH i IN items.nsort('record') %]
+					[% # Show only items where the collection / sublibrary are matching each other %]
+					[% IF i.collection == params.sublibrary %]
+					<tr class="[% i.record %]">
+						<td>[% i.year %]</td>
+						<td>[% i.volume %]</td>
+						<td>[% i.issue %]</td>
+						<td>[% i.sub_library %]</td>
+						<td>[% i.collection %]</td>
+						<td>[% i.item_status %]</td>
+						<form class="opret" id="opret[% i.record %]" name="opret[% i.record %]" action="opret">
+							<input type="hidden" name="record" value="[% i.record %]">
+							<input type="hidden" name="barcode" value="[% i.barcode %]">
+							<input type="hidden" name="admsys" value="[% params.admsys %]">
+							<input type="hidden" name="volume" value="[% i.volume %]">
+							<input type="hidden" name="issue" value="[% i.issue %]">
+							<input type="hidden" name="year" value="[% i.year %]">
+							<input type="hidden" name="title" value="[% params.title %]">
+							<input type="hidden" name="sub_library" value="[% i.sub_library %]">
+							<input type="hidden" name="collection" value="[% i.collection %]">
+							<input type="hidden" name="item_status" value="[% i.item_status %]">
+							<input type="hidden" name="label_library" value="[% params.library %]">
+							<input type="hidden" name="label_sublibrary" value="[% params.sublibrary %]">
+							<input type="hidden" name="label_shelfmark" value="[% params.shelfmark %]">
+							<input type="hidden" name="processstatus" value="[% params.processstatus %]">
+							<td><button class="btn btn-success btn-sm btn-[% i.record %]">Opret</button></td>
+						</form>
+						<form class="ryk" id="ryk[% i.record %]" name="ryk[% i.record %]" action="ryk">
+							<input type="hidden" name="record" value="[% i.record %]">
+							<input type="hidden" name="admsys" value="[% params.admsys %]">
+							<input type="hidden" name="title" value="[% params.title %]">
+							<input type="hidden" name="issn" value="[% params.issn %]">
+							<input type="hidden" name="volume" value="[% i.volume %]">
+							<input type="hidden" name="issue" value="[% i.issue %]">
+							<input type="hidden" name="year" value="[% i.year %]">
+							<input type="hidden" name="label_library" value="[% params.library %]">
+							<input type="hidden" name="label_sublibrary" value="[% params.sublibrary %]">
+							<input type="hidden" name="customerid" value="[% params.customerid %]">
+							<input type="hidden" name="email" value="[% params.email %]">
+							<td><button class="btn btn-warning btn-sm btn-[% i.record %]">Ryk</button></td>
+						</form>
+						<form class="slet" id="slet[% i.record %]" name="slet[% i.record %]" action="slet">
+							<input type="hidden" name="record" value="[% i.record %]">
+							<input type="hidden" name="barcode" value="[% i.barcode %]">
+							<input type="hidden" name="volume" value="[% i.volume %]">
+							<input type="hidden" name="issue" value="[% i.issue %]">
+							<input type="hidden" name="year" value="[% i.year %]">
+							<td><button class="btn btn-danger btn-sm btn-[% i.record %]">Slet</button></td>
+						</form>
+					</tr>
+					[% IF i.reminder %]
+					<tr>
+						<td colspan="9">
+							Ovenstående rykket hos leverandør: [% dato.format(i.reminder) %] (reference: [% i.record %])
+						</td>
+					</tr>
+					[% END %]
+					[% END %]
+					[% END %]
+					<tr>
+						<form class="opret" id="opret" name="opret" action="opret">
+							<input type="hidden" name="title" value="[% params.title %]">
+							<input type="hidden" name="label_library" value="[% params.library %]">
+							<input type="hidden" name="label_sublibrary" value="[% params.sublibrary %]">
+							<input type="hidden" name="label_shelfmark" value="[% params.shelfmark %]">
+							<input type="hidden" name="admsys" value="[% params.admsys %]">
+							<input type="hidden" name="processstatus" value="[% params.processstatus %]">
+							<td><input type="text" class="form-control" name="year" value="[% date.format %]"></td>
+							<td><input type="text" class="form-control" name="volume"></td>
+							<td><input type="text" class="form-control" name="issue"></td>
+							<td>[% params.library %]</td>
+							<td>[% params.sublibrary %]</td>
+							<td><input type="text" class="form-control" name="item_status" value="[% params.itemstatus %]"></td>
+							<td><button class="btn btn-success btn-sm">Opret</button></td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</form>
+					</tr>
+				</tbody>
+			</table>
+			[% ELSIF params.admsys %]
+			<div class="alert alert-success">
+				<button type="button" class="close fui-cross" data-dismiss="alert"></button>
+				<h4>Mønster kan ikke hentes ...</h4>
+				<p>Der kunne ikke findes yderligere forudoprettede eksemplarer, som skal bruges til modtagelse af tidsskriftet. Opret først et nyt mønster i Aleph. Ellers er det ikke muligt at fortsætte.</p>
+				[% IF error %]
+				<p>
+					<strong>Fejlmeddelelse fra Aleph: </strong>
+					[% error %]
+				</p>
+				[% END %]
+				<a href="#" class="btn btn-info btn-wide" data-dismiss="alert">Ok!</a>
+			</div>
+
+			[% END %]
+
+		</div>
+
+	</div><!-- class:row -->
+</div><!-- container -->
+
+
+[% INCLUDE footer.tt %]

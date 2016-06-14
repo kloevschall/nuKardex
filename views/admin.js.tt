@@ -1,0 +1,50 @@
+<!-- When document ready -->
+<script>
+	console.log("JSON editor page");
+	$.ajax({
+		async: true,
+		global: false,
+		url: "data/subscriptions.json",
+		dataType: "json",
+		success: function (data) {
+			console.log("JSON loaded");
+			var container = document.getElementById("jsoneditor");
+			var options = {
+				mode: 'code',
+				indentation: 3
+			};
+			var editor = new JSONEditor(container, options);
+			editor.set(data);
+			editor.focus();
+
+			$('#save').click(function() {
+				$('.console').append('<tt class="small">Forsøger at gemme abonnementslisten på serveren: </tt>')
+				$.ajax({
+					type: "POST",
+					url: "subscriptions",
+					data: { subscriptions: editor.getText() },
+					dataType: "json",
+					success: function(responseText, statusText, xhr) {
+						setTimeout(function() {
+							console.log(responseText);
+							if ( responseText.success ) {
+								$('.console').append('<tt class="small">Abonnementslisten er gemt på serveren ...</tt><br/>');
+							} else {
+								$('.console').append('<tt class="small">Kunne ikke gemme abonnementslisten. Tjek venligst logfilen på serveren for yderligere information ...</tt><br/>');
+							};
+						}, 1000);
+					}
+				});
+			});
+
+			$('#saveas').click(function() {
+				var blob = new Blob([editor.getText()], {type: 'application/json;charset=utf-8'});
+				saveAs(blob, 'subscriptions_' + epoch() + '.json');
+			});
+		}
+	});
+
+function epoch() {
+	return Math.floor((new Date).getTime()/1000);
+}
+</script>

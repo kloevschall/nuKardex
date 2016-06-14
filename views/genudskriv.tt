@@ -1,0 +1,99 @@
+<div class="container">
+	<div class="row">
+		[% PROCESS header.tt %]
+
+		<div class="well">
+
+			<!-- Find mønster formular -->
+			<div class="row">
+				
+				<form class="form" role="form" id="printBarcode" name="printBarcode" onSubmit="return false;">
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="admsys">ADMSYS <sup>&nbsp;&nbsp;[ctrl+alt+a]</sup></label>
+							<input value="[% params.admsys %]" type="text" class="form-control typeahead-only mousetrap" name="admsys" id="admsys" placeholder="doc-number">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="issn">ISSN nummer <sup>&nbsp;&nbsp;[ctrl+alt+i]</sup></label>
+							<input value="[% params.issn %]" type="text" class="form-control typeahead-only mousetrap" name="issn" id="issn" placeholder="ISSN">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-6">
+							<label for="title">Tidsskriftstitel <sup>&nbsp;&nbsp;[ctrl+alt+t]</sup></label>
+							<input value="[% params.title %]" type="text" class="form-control typeahead-only mousetrap" name="title" id="title" placeholder="Titel">
+						</div>
+					</div>
+					<!-- Automatically filled in information -->
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="library">Placering</label>
+							<input value="[% params.library %]" type="text" class="form-control" name="library" id="library">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="sublibrary">Samling</label>
+							<input value="[% params.sublibrary %]" type="text" class="form-control" name="sublibrary" id="sublibrary">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="shelfmark">Opstilling</label>
+							<input value="[% params.shelfmark %]" type="text" class="form-control" name="shelfmark" id="shelfmark">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="itemstatus">Status</label>
+							<input value="[% params.itemstatus %]" type="text" class="form-control" name="itemstatus" id="itemstatus">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="barcode">Stregkode</label>
+							<input value="[% params.barcode %]" type="text" class="form-control" name="barcode" id="barcode" placeholder="[% settings.barcode_seed %]">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="year">År / year</label>
+							<input value="[% params.year %]" type="text" class="form-control" name="year" id="year">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="volume">Årgang / volume</label>
+							<input value="[% params.volume %]" type="text" class="form-control" name="volume" id="volume">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label for="issue">Nummer / issue</label>
+							<input value="[% params.issue %]" type="text" class="form-control" name="issue" id="issue">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<br>
+							<button class="btn btn-success" onclick="reprintLabel();">Udskriv stregkode</button>
+						</div>
+					</div>
+				</form>
+				
+			</div>
+		</div>
+
+		<span class="pull-right"><tt><sup>KONSOL&nbsp;</sup></tt></span>
+		<div class="panel panel-default">
+			<div class="panel-body console">
+			</div>
+		</div>
+
+	</div><!-- class:row -->
+</div><!-- container -->
+
+
+[% INCLUDE footer.tt %]

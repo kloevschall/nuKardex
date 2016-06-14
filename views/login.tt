@@ -1,0 +1,37 @@
+[% USE Dumper(Indent=1) %]
+[% USE date (format = '%Y', locale = 'da_DK') %]
+
+<div class="container">
+	<div class="row">
+		[% PROCESS header.tt %]
+
+		[% IF error %]
+		<div class="alert alert-warning alert-dismissable">
+			<button class="close fui-cross" data-dismiss="alert" aria-hidden="true"></button>
+			<h4>[% error %]</h4>
+			<p>Du har indtastet forkerte oplysninger og kan ikke logges ind. Pr&oslash;v igen ...</p>
+			<a href="#fakelink" class="btn btn-danger btn-wide" data-dismiss="alert"><span class="fui-alert"></span>&nbsp;&nbsp;Jeps, det er forst&aring;et!</a>
+		</div>
+
+		[% END %]
+		<div class="well">
+			<p>Angiv venligst korrekt brugernavn og password for at forts&aelig;tte:</p>
+			<div class="dialog">
+				<div class="container">
+					<form role="form" name="login" action="login" method="post" class="form-inline">
+						<div class="form-group">
+							<label class="sr-only" for="username">Brugernavn</label>
+							<input autofocus="autofocus" name="username" type="text" class="form-control flat" id="username" placeholder="Brugernavn">
+						</div>
+						<div class="form-group">
+							<label class="sr-only" for="password">Password</label>
+							<input name="password" type="password" class="form-control flat" id="password" placeholder="Password">
+						</div>
+						<button class="btn btn-success btn-wide">Login</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<p class="small pull-right">[% settings.appname %] version [% version %]-[% settings.environment %]</p>
+	</div><!-- class:row -->
+</div>

@@ -1,0 +1,25 @@
+[% IF session.user == settings.demousername %]
+<p class="text-center palette emerald">
+	<strong>
+	K&oslash;rer i "DEMO MODE" og alle handlinger simuleres.
+	</strong>
+</p>
+[% END %]
+
+[% SET is_login = component.caller.substr(-8) %]
+[% IF is_login == 'login.tt' %]	
+<div class="text-center">
+	<a href="http://www.aub.aau.dk">
+		<svg width="220" height="124">
+			<image xlink:href="images/AUB-logo-dan.svg" src="images/AUB-logo-dan.png" width="220" height="124" />
+		</svg>
+	</a>
+</div>
+[% END %]
+
+<div class="headline">
+	<h1 class="logo">
+		[% settings.appname %]
+		<small>kardex registrering af tidsskrifter</small>
+	</h1>
+</div>

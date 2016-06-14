@@ -1,0 +1,137 @@
+<script>
+	// Via idea from: http://jsfiddle.net/Fresh/kLLCy/
+
+	// API: https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md
+	//      https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md
+	
+
+	// Define the Bloodhound suggestion engine for each key within the data set
+	var admsys = new Bloodhound({
+		datumTokenizer: function (d) {
+			return Bloodhound.tokenizers.whitespace(d.admsys);
+		},
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		limit: 10,
+		prefetch: 'data/subscriptions.json'
+	});
+	var issn = new Bloodhound({
+		datumTokenizer: function (d) {
+			return Bloodhound.tokenizers.whitespace(d.issn);
+		},
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		limit: 10,
+		prefetch: 'data/subscriptions.json'
+	});
+	var title = new Bloodhound({
+		datumTokenizer: function (d) {
+			return Bloodhound.tokenizers.whitespace(d.title);
+		},
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		limit: 10,
+		prefetch: 'data/subscriptions.json'
+	});
+
+	// Always clear the prefetch cache when in development
+	admsys.clearPrefetchCache();
+	issn.clearPrefetchCache();
+	title.clearPrefetchCache();
+
+	// Initialise the Bloodhound suggestion engine for each key
+	admsys.initialize(true);
+	issn.initialize(true);
+	title.initialize(true);
+
+	$('#admsys').typeahead(
+	{
+		highlight: true
+	},
+	{
+		name: 'admsys',
+		displayKey: function(admsys) { 
+			return admsys.admsys + ' (' + admsys.library + ' / ' + admsys.sublibrary + ')';
+		},
+		source: admsys.ttAdapter()
+	});
+
+	$('#issn').typeahead(
+	{
+		highlight: true
+	},
+	{
+		name: 'issn',
+		displayKey: function(issn) { 
+			return issn.issn + ' (' + issn.library + ' / ' + issn.sublibrary + ')';
+		},
+		source: issn.ttAdapter()
+	});
+
+	$('#title').typeahead(
+	{
+		highlight: true
+	},
+	{
+		name: 'title',
+		displayKey: function(title) { 
+			return title.title + ' (' + title.library + ' / ' + title.sublibrary + ')';
+		},
+		//displayKey: 'title',
+		source: title.ttAdapter()
+	});
+
+	var admsysSelectedHandler = function(eventObject, suggestionObject, suggestionDataset) {
+		console.log(JSON.stringify(suggestionObject));
+		$('#admsys').typeahead('val', suggestionObject.admsys);
+		$('#issn').typeahead('val', suggestionObject.issn);
+		$('#title').typeahead('val', suggestionObject.title);
+		// Hidden fields
+		$('#bibsys').val(suggestionObject.bibsys);
+		$('#library').val(suggestionObject.library);
+		$('#sublibrary').val(suggestionObject.sublibrary);
+		$('#shelfmark').val(suggestionObject.shelfmark);
+		$('#itemstatus').val(suggestionObject.itemstatus);
+		$('#processstatus').val(suggestionObject.processstatus);
+		$('#customerid').val(suggestionObject.customerid);
+		$('#email').val(suggestionObject.email);
+		// Submit form
+		$('#getJournal').submit();
+	}
+	var issnSelectedHandler = function(eventObject, suggestionObject, suggestionDataset) {
+		console.log(JSON.stringify(suggestionObject));
+		$('#admsys').typeahead('val', suggestionObject.admsys);
+		$('#issn').typeahead('val', suggestionObject.issn);
+		$('#title').typeahead('val', suggestionObject.title);
+		// Hidden fields
+		$('#bibsys').val(suggestionObject.bibsys);
+		$('#library').val(suggestionObject.library);
+		$('#sublibrary').val(suggestionObject.sublibrary);
+		$('#shelfmark').val(suggestionObject.shelfmark);
+		$('#itemstatus').val(suggestionObject.itemstatus);
+		$('#processstatus').val(suggestionObject.processstatus);
+		$('#customerid').val(suggestionObject.customerid);
+		$('#email').val(suggestionObject.email);
+		// Submit form
+		$('#getJournal').submit();
+	}
+	var titleSelectedHandler = function(eventObject, suggestionObject, suggestionDataset) {
+		console.log(JSON.stringify(suggestionObject));
+		$('#admsys').typeahead('val', suggestionObject.admsys);
+		$('#issn').typeahead('val', suggestionObject.issn);
+		$('#title').typeahead('val', suggestionObject.title);
+		// Hidden fields
+		$('#bibsys').val(suggestionObject.bibsys);
+		$('#library').val(suggestionObject.library);
+		$('#sublibrary').val(suggestionObject.sublibrary);
+		$('#shelfmark').val(suggestionObject.shelfmark);
+		$('#itemstatus').val(suggestionObject.itemstatus);
+		$('#processstatus').val(suggestionObject.processstatus);
+		$('#customerid').val(suggestionObject.customerid);
+		$('#email').val(suggestionObject.email);
+		// Submit form
+		$('#getJournal').submit();
+	}
+
+	$('#admsys').on('typeahead:selected', admsysSelectedHandler);
+	$('#issn').on('typeahead:selected', issnSelectedHandler);
+	$('#title').on('typeahead:selected', titleSelectedHandler);
+
+</script>

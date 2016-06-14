@@ -1,0 +1,28 @@
+Unfortunately, we have not yet received our copy of the following issue of:
+[% title %]
+
+ISSN:
+[% issn %]
+
+Volume:
+[% volume %]
+
+Issue:
+[% issue %]
+
+Year:
+[% year %]
+
+[% IF customerid %]
+Your reference (e.g. customer id):
+[% customerid %]
+[% END %]
+
+Our reference:
+[% record %]
+
+Could you please check the status of the missing issue? If, by chance, the issue has already been sent, please disregard this email.
+
+
+Kind regards,
+...

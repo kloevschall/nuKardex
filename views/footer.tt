@@ -1,0 +1,15 @@
+<div class="bottom-menu bottom-menu-inverse hidden-print">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<ul class="bottom-menu-list">
+					<li><a href="logout">Log ud</a></li>
+					<li><a href="restart">Start forfra</a></li>
+					<li><a href="genudskriv">Genudskriv stregkode</a></li>
+					<li><a href="admin">Administrer abonnementer</a></li>
+					<li class="pull-right">Du er logget ind som bruger: [% session.user %]</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

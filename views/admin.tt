@@ -1,0 +1,26 @@
+<div class="container">
+	<div class="row">
+		[% PROCESS header.tt %]
+
+		<div id="jsoneditor" style="width: 100%; height: 550px;">
+		</div>
+
+		<p>
+			<p></p>
+			<button id="save" type="button" class="btn btn-danger">Gem på server</button>
+			<button id="saveas" type="button" class="btn btn-info">Gem som lokal fil (backup)</button>
+			<button id="reload" type="button" class="btn btn-info" onclick="location.reload();">Genindlæs fra server</button>
+
+		</p>
+
+		<span class="pull-right"><tt><sup>KONSOL&nbsp;</sup></tt></span>
+		<div class="panel panel-default">
+			<div class="panel-body console">
+			</div>
+		</div>
+
+	</div><!-- class:row -->
+</div><!-- container -->
+
+
+[% INCLUDE footer.tt %]

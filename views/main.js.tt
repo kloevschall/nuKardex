@@ -1,0 +1,224 @@
+[% # Only attach printer if items are available or printer is specifically requested %]
+[% IF items.0.record or attach_printer %]
+<script>
+	//
+	// DYMO LabelWriter init code
+	//
+	function startupCode() {
+		var printers = dymo.label.framework.getPrinters();
+		console.log(printers);
+		var printerName = "";
+
+		if ( printers.length == 0 ) {
+			$('.console').append('<tt class="small">Kan ikke forbinde til en tilsluttet DYMO LableWriter. Det er ikke muligt at udskrive labels ...</tt><br/>');
+		}
+		else {
+			for ( var i = 0; i < printers.length; ++i ) {
+				var printer = printers[i];
+				if ( printer.printerType == "LabelWriterPrinter") {
+					printerName = printer.name;
+					break;
+				}
+			}
+			//$('.console').append('<tt class="small">Tilsluttet printer: ' + printerName + '...</tt><br/>');
+		}
+	}
+
+	function frameworkInitShim() {
+		//dymo.label.framework.trace = 1;
+		dymo.label.framework.init(startupCode);
+	}
+
+	window.onload = frameworkInitShim();
+</script>
+[% END %]
+
+<!-- Local functions -->
+<script>
+	//
+	// Print a barcode label
+	//
+	function printLabel(stregkode, opstilling, admsys, titel, udgave) {
+		console.log("Print label ...");
+		var printers = dymo.label.framework.getPrinters();
+		var printerName = "";
+
+		for ( var i = 0; i < printers.length; ++i ) {
+			var printer = printers[i];
+			if ( printer.printerType == "LabelWriterPrinter") {
+				printerName = printer.name;
+				break;
+			}
+		}
+		// Load the label xml-template via jQuery
+		$.get("data/journal.label", function(labelXml) {
+			// Load label file from server
+			var label = dymo.label.framework.openLabelXml(labelXml);
+
+			// Fill in: stregkode, opstilling, admsys, titel, udgave
+			label.setObjectText("STREGKODE", stregkode);
+			label.setObjectText("OPSTILLING", opstilling);
+			label.setObjectText("ADMSYS", admsys);
+			label.setObjectText("TITEL", titel);
+			label.setObjectText("UDGAVE", udgave);
+
+			// Render label onto our "console"
+			var pngData = label.render(null, printerName);
+			$('.console').append('<img alt="barcode" src="data:image/png;base64,' + pngData + '" /><br/>');
+
+			[% IF session.user != settings.demousername %]
+			// Print label on printer
+			label.print(printerName);
+			[% END %]
+		}, "text");
+	}
+	//
+	// Reprint a barcode label
+	//
+	function reprintLabel() {
+		$('.console').append('<tt class="small">Udskriver stregkode ...</tt><br/>');
+		// Get label input from form fields and print it
+		stregkode = $('#barcode').val();
+		opstilling = $('#library').val() + ' ' + $('#sublibrary').val() + ' ' + $('#itemstatus').val() + ' ' + $('#shelfmark').val();
+		admsys = $('#admsys').val();
+		titel = $('#title').val();
+		if ( $('#volume').val() == "" || $('#volume').val() == "^" ) {
+			udgave = $('#year').val() + ' ' + $('#issue').val()
+		}
+		else {
+			udgave = $('#year').val() + ' ' + $('#volume').val() + ' ' + $('#issue').val()
+		}
+		printLabel(stregkode, opstilling, admsys, titel, udgave);
+	}
+</script>
+
+<!-- When document ready -->
+<script>
+	$(document).ready(function() {
+		//
+		// Init copy to clipboard
+		//
+		var clipboard = new Clipboard('.clip');
+		//
+		// Register keyboard shortcuts 
+		//
+		Mousetrap.bind('ctrl+alt+a', function(e) {
+			$('#admsys').val('').focus();
+			return false;
+		});
+		Mousetrap.bind('ctrl+alt+i', function(e) {
+			$('#issn').val('').focus();
+			return false;
+		});
+		Mousetrap.bind('ctrl+alt+t', function(e) {
+			$('#title').val('').focus();
+			return false;
+		});
+		//
+		// Clear the search forms on click
+		//
+		$('#admsys').on('click', function() {
+			$('#admsys').val('').focus();
+		});
+		$('#issn').on('click', function() {
+			$('#issn').val('').focus();
+		});
+		$('#title').on('click', function() {
+			$('#title').val('').focus();
+		});
+		//
+		// Check-in an issue
+		//
+		$('.opret').ajaxForm( {
+			dataType: 'json',
+			type: 'POST',
+			beforeSubmit: function(arr, $form, options) {
+				console.log(arr);
+				console.log($form);
+				$('html, body').animate({ scrollTop: 0}, "slow");
+
+			},
+			success: function(responseText, statusText, xhr) {
+				console.log(responseText);
+				if ( responseText.success ) {
+					setTimeout(function() {
+						$('.btn-' + responseText.record).prop('disabled', true);
+						$('.console').append('<tt class="small">Eksemplar med stregkode ' + responseText.barcode + ' oprettet i Aleph ...</tt><br/>');
+						//Get info for: stregkode, opstilling, admsys, titel, udgave
+						stregkode = responseText.barcode;
+						opstilling = responseText.library + ' ' + responseText.sublibrary + ' ' + responseText.itemstatus + ' ' + responseText.shelfmark;
+						admsys = responseText.admsys;
+						titel = responseText.title;
+						if ( responseText.volume == "^" ) {
+							udgave = responseText.year + ' ' + responseText.issue;
+						}
+						else {
+							udgave = responseText.year + ' ' + responseText.volume + ' ' + responseText.issue;
+						}
+
+						printLabel(stregkode, opstilling, admsys, titel, udgave);
+					}, 1000);
+				} else {
+					$('.console').append('<tt class="small">Kunne ikke oprette eksemplar pga. et problem: ' + responseText.status + '</tt><br/>');
+				}
+			},
+			error: function() {
+				setTimeout(function() {
+					$('.console').append('<tt class="small">Kunne ikke oprette eksemplar pga. et problem i kommunikationen med serverens API ...</tt><br/>');
+				}, 1000);
+			}
+		});
+		//
+		// Send claim for an issue
+		//
+		$('.ryk').ajaxForm( {
+			dataType: 'json',
+			type: 'POST',
+			beforeSubmit: function() {
+				$('html, body').animate({ scrollTop: 0}, "slow");
+			},
+			success: function(responseText, statusText, xhr) {
+				console.log(responseText);
+				if ( responseText.success ) {
+					setTimeout(function() {
+						$('.btn-' + responseText.record).prop('disabled', true);
+						$('.console').append('<tt class="small">Rykker sendt til ' + responseText.email + ' vedr. manglende vol. ' + responseText.volume + ' iss. ' + responseText.issue + ' yr. ' + responseText.year + ' ...</tt><br/>');
+					}, 1000);
+				} else {
+					$('.console').append('<tt class="small">Kunne ikke sende rykker pga. et problem med at afsende e-mail. Tjek venligst logfilen på serveren for yderligere information ...</tt><br/>');
+				};
+			},
+			error: function() {
+				setTimeout(function() {
+					$('.console').append('<tt class="small">Kunne ikke sende rykker pga. et problem i kommunikationen med serverens API ...</tt><br/>');
+				}, 1000);
+			}
+		});
+		//
+		// Delete one of the publication schedule issues
+		//
+		$('.slet').ajaxForm( {
+			dataType: 'json',
+			type: 'POST',
+			beforeSubmit: function() {
+				$('html, body').animate({ scrollTop: 0}, "slow");
+			},
+			success: function(responseText, statusText, xhr) {
+				console.log(responseText);
+				if ( responseText.success ) {
+					setTimeout(function() {
+						$('.btn-' + responseText.record).prop('disabled', true);
+						$('.console').append('<tt class="small">Eksemplar for vol. ' + responseText.volume + ' iss. ' + responseText.issue + ' yr. ' + responseText.year + ' er slettet ...</tt><br/>');
+					}, 1000);
+				} else {
+					$('.console').append('<tt class="small">Kunne ikke slette eksemplar pga. et problem: ' + responseText.status + '</tt><br/>');
+				};
+			},
+			error: function() {
+				setTimeout(function() {
+					$('.console').append('<tt class="small">Kunne ikke slette eksemplar pga. et problem i kommunikationen med serverens API ...</tt><br/>');
+				}, 1000);
+			}
+		});
+	});
+</script>

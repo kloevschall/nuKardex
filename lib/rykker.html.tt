@@ -1,0 +1,40 @@
+<html>
+	<body>
+		<p>
+		Unfortunately, we have not yet received our copy of the following issue of:<br/>
+		<strong>[% title %]</strong>
+		</p>
+
+		<dl>
+			<dt>ISSN:</dt>
+			<dd>[% issn %]</dd>
+
+			<dt>Volume:</dt>
+			<dd>[% volume %]</dd>
+
+			<dt>Issue:</dt>
+			<dd>[% issue %]</dd>
+
+			<dt>Year:</dt>
+			<dd>[% year %]</dd>
+
+			[% IF customerid %]
+			<dt>Your reference (e.g. customer id):</dt>
+			<dd>[% customerid %]</dd>
+			[% END %]
+
+			<dt>Our reference:</dt>
+			<dd>[% record %]</dd>
+		</dl>
+
+		<p>
+		Could you please check the status of the missing issue? If, by chance, the issue has already been sent, please disregard this email.
+		</p>
+
+		<p>
+		Kind regards,<br/>
+		...<br/>
+		</p>
+
+	</body>
+</html>
