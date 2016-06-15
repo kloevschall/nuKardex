@@ -9,6 +9,8 @@ The application was presented at the [ELAG 2016](http://elag2016.org/index.php/p
 
 nuKardex backend API and application is written in Perl using the [Dancer](http://perldancer.org/) framework. User interface is written in HTML5 using Bootstrap (originally [Flat UI Pro](http://designmodo.com/flat/) which is why the interface is not as polished as in the presentation) and jQuery for interaction with the UI, backend and label printer API.
 
+![Journal check-in](/public/images/screenshot1.png?raw=true "Checking in issue 8 of our journal")
+
 ## Installation
 
 Grab the source code:
@@ -41,3 +43,21 @@ Edit the file `config.yml` and change the __username__ and __password__ settings
 Edit the __aleph_x_server__ setting to point to your Aleph installation (version 21 or later). The __aleph_adm_library__ and __aleph_logical_base__ must be configured according to your Aleph installation. The X-Service username and password must be set and created in Aleph with the appropriate permissions.
 
 Edit the __mailer__ settings if you need to send out issue claims via email.
+
+## Screenshots
+
+Journal titles can be located by system identifier, ISSN or title using typeahead sourced from the subscriptions file (JSON):
+
+![Journal check-in](/public/images/screenshot2.png?raw=true "Journals are located using typeahead sourced from the subscriptions file")
+
+Barcode labels can be reprinted if damaged:
+
+![Journal check-in](/public/images/screenshot3.png?raw=true "Reprinting barcode label")
+
+If the predefined publication patteren does not match issues can be created manually:
+
+![Journal check-in](/public/images/screenshot4.png?raw=true "Out of pattern issue")
+
+Direct printing from the web browser to Dymo LabelWriter printers:
+
+![Journal check-in](/public/images/printer.JPG?raw=true "Printed label")
