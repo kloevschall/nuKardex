@@ -5,7 +5,7 @@ requires 'Dancer::Plugin::Database';
 requires 'HTTP::Server::PSGI';
 requires 'Plack';
 requires 'PSGI';
-requires 'Server::Starter',
+requires 'Server::Starter';
 requires 'Starman';
 requires 'Template';
 requires 'Test::More';
